@@ -2,11 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabaseClient } from '@/lib/supabase/client';
+import { createSupabaseClient } from '@/lib/supabase/client';
 
 export default function ConfirmPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const supabase = createSupabaseClient();
 
   useEffect(() => {
     const token_hash = searchParams.get('token_hash');
@@ -15,7 +16,7 @@ export default function ConfirmPage() {
 
     if (token_hash && type === 'recovery') {
       async function verify() {
-        const { error } = await supabaseClient.auth.verifyOtp({
+        const { error } = await supabase.auth.verifyOtp({
           token_hash,
           type: 'recovery',
         });
