@@ -1,8 +1,8 @@
-// middleware.js
+// proxy.js
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 
-export async function middleware(request) {
+export async function proxy(request) {
   let response = NextResponse.next()
 
   const supabase = createServerClient(
@@ -28,9 +28,9 @@ export async function middleware(request) {
 
   // If session exists, make sure it's synced
   if (session) {
-    console.log('Middleware - Session user ID:', session.user.id)
+    console.log('Proxy - Session user ID:', session.user.id)
   } else {
-    console.log('Middleware - No session found')
+    console.log('Proxy - No session found')
   }
 
   return response
