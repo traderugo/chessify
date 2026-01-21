@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createSupabaseClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 export default function ConfirmPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const supabase = createSupabaseClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const token_hash = searchParams.get('token_hash');
