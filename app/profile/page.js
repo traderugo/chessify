@@ -15,8 +15,8 @@ export default function ProfilePage() {
     location: "",
     dob: "",
   });
-  supabase = createClient();
-  
+  const supabase = createClient();
+
   const [saveStatus, setSaveStatus] = useState("");
   useEffect(() => {
     fetchProfile();
