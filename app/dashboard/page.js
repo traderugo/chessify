@@ -105,7 +105,7 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-8">
 
 {/* Dynamic Wallet */}
-<div className="bg-gradient-to-br from-gray-600 to-gray-600 rounded-2xl p-6 text-white shadow-xl">
+<div className="bg-gradient-to-br from-gray-800 to-gray-800 rounded-2xl p-6 text-white shadow-xl">
   <div className="flex items-center justify-between mb-4">
     <div className="flex items-center gap-2">
       <Wallet className="w-5 h-5" />
