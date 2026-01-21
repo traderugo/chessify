@@ -1,0 +1,12 @@
+INSERT INTO "public"."tournaments" ("id", "title", "description", "host_id", "entry_fee", "currency", "max_participants", "start_date", "status", "prize_pool", "external_link", "created_at", "updated_at", "platform") VALUES ('5a1c5fdd-abe3-41aa-a042-46155119f448', 'By Grooo', 'Just another Description.
+
+TAKE NOTE. 
+
+Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.
+
+Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.Just another Description.', '6df05adb-9e2e-4a7d-b454-0e70c3a59091', '0', 'NGN', '600', '2026-01-19 16:59:00+00', 'draft', '0', 'https://chess.com', '2026-01-17 17:00:14.493942+00', '2026-01-17 17:00:14.493942+00', null), ('730f8a0f-78b3-46e6-87f5-ec80b6cd0f60', 'Others', 'All of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lights
+
+HELLO THERE.
+All of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll 
+
+of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lightsAll of the lights', 'c8002362-5200-4b10-9c21-d93343cc2290', '20000', 'NGN', '12', '2026-01-21 11:33:00+00', 'draft', '0', 'https://chess.com', '2026-01-13 14:31:57.179424+00', '2026-01-19 06:47:28.879121+00', 'chesscom'), ('7b956891-e889-4dbc-af9e-5bb179a88323', 'kagis', '1 roud', 'c8002362-5200-4b10-9c21-d93343cc2290', '1000000', 'NGN', '12', '2026-01-07 12:50:00+00', 'draft', '0', 'https://lichess.com', '2026-01-13 12:48:52.735837+00', '2026-01-13 12:48:52.735837+00', 'lichess'), ('9cad1c0a-8996-4c6e-be01-cb67a225f2f4', 'Ekpoma Chess', '10 rounds', 'c8002362-5200-4b10-9c21-d93343cc2290', '100000000', 'NGN', '12', '2026-02-07 21:51:00+00', 'draft', '0', 'http://lichess.org', '2026-01-13 13:49:34.478438+00', '2026-01-13 15:05:55.324919+00', 'offline');
