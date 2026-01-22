@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { Trophy, Search, Sparkles, Flame, Star, Plus } from "lucide-react";
 
-import TournamentListItemCompact from "@/components/tournament/TournamentListItemCompact";
+import TournamentListItem from "@/components/tournament/TournamentListItem";
 import CreateTournamentButton from "@/components/tournament/CreateTournamentButton";
 import TournamentCardSkeleton from "@/components/tournament/TournamentCardSkeleton";
 
@@ -138,7 +138,7 @@ className={`
         <TournamentCardSkeleton key={i} />
       ))
     : tournaments.map((tournament) => (
-        <TournamentListItemCompact
+        <TournamentListItem
           key={tournament.id}
           tournament={tournament}
           variant="card"
