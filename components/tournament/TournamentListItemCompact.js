@@ -32,7 +32,6 @@ export default function TournamentListItemCompact({
       href={`/tournaments/${tournament.id}`}
       className="
         group block
-        border border-gray-400
         bg-white dark:bg-[#0d1117]
         hover:bg-gray-50 dark:hover:bg-[#161b22]
         transition-colors
