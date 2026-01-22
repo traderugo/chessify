@@ -92,7 +92,7 @@ export default function TournamentListItemCompact({
         {/* CHEVRON */}
         <ChevronRight
           size={18}
-          className="mt-2 text-gray-300 group-hover:text-blue-500 transition-colors"
+          className="mt-2 text-gray-500 group-hover:text-blue-800 transition-colors"
         />
       </div>
     </Link>
