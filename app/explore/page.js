@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { Trophy, Search, Sparkles, Flame, Star, Plus } from "lucide-react";
 
-import TournamentListItem from "@/components/tournament/TournamentListItem";
+import TournamentListItemCompact from "@/components/tournament/TournamentListItemCompact";
 import CreateTournamentButton from "@/components/tournament/CreateTournamentButton";
 import TournamentCardSkeleton from "@/components/tournament/TournamentCardSkeleton";
 
@@ -132,13 +132,13 @@ className={`
             </p>
           </div>
         ) : (
-<div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+<div className="grid sm:grid-cols-2 lg:grid-cols-3">
   {isLoading
     ? Array.from({ length: 6 }).map((_, i) => (
         <TournamentCardSkeleton key={i} />
       ))
     : tournaments.map((tournament) => (
-        <TournamentListItem
+        <TournamentListItemCompact
           key={tournament.id}
           tournament={tournament}
           variant="card"
