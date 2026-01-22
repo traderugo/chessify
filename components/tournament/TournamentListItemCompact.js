@@ -37,7 +37,7 @@ export default function TournamentListItemCompact({
         transition-colors
       "
     >
-      <div className="flex items-start gap-4 px-5 py-4 border border-gray-400">
+      <div className="flex items-start gap-4 px-5 py-4 border border-gray-200">
 
         {/* LEFT ACCENT */}
         <div className="w-1 self-stretch rounded-full bg-blue-500/70" />
