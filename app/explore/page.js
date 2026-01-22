@@ -84,9 +84,9 @@ export default async function ExplorePage({ searchParams }) {
   placeholder="Search tournaments..."
   className="
     w-full pl-11 pr-4 py-3.5
-    bg-white/10 border border-white/10
+    bg-white/10 border border-blue/10
     rounded-xl
-    text-gray placeholder-gray-400
+     placeholder-gray-400
     focus:outline-none focus:border-white/30
     transition
   "
@@ -132,7 +132,7 @@ className={`
             </p>
           </div>
         ) : (
-<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+<div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
   {isLoading
     ? Array.from({ length: 6 }).map((_, i) => (
         <TournamentCardSkeleton key={i} />
