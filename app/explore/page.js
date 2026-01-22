@@ -176,7 +176,7 @@ className="px-5 py-2 rounded-full bg-gray-900 text-white text-sm font-medium hov
         )}
         {/* ================= CTA SECTION ================= */}
 {/* CTA */}
-<section className="relative mt-16 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-xl overflow-hidden">
+<section className="relative mt-8 bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-md overflow-hidden">
   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.2),transparent_60%)]" />
 
   <div className="relative px-6 py-8 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
