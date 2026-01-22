@@ -86,7 +86,7 @@ export default async function ExplorePage({ searchParams }) {
     w-full pl-11 pr-4 py-3.5
     bg-white/10 border border-white/10
     rounded-xl
-    text-white placeholder-gray-400
+    text-gray placeholder-gray-400
     focus:outline-none focus:border-white/30
     transition
   "
