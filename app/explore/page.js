@@ -75,7 +75,7 @@ export default async function ExplorePage({ searchParams }) {
 
           {/* Search + Tabs */}
           <div className="mt-3 flex flex-col sm:flex-row gap-4 sm:items-center">
-            <div className="relative border bg-white border-blue rounded-xl flex-1 max-w-md">
+            <div className="relative border text-gray-900 bg-white border-blue rounded-md flex-1 max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 " size={18} />
               <form action="/explore" method="get">
 <input
@@ -85,7 +85,7 @@ export default async function ExplorePage({ searchParams }) {
   className="
     w-full pl-11 pr-4 py-3.5
     bg-white/10 border border-blue/10
-    rounded-xl
+    rounded-md text-gray-900 dark:text-gray-100
      placeholder-gray-400
     focus:outline-none focus:border-white/30
     transition
