@@ -142,7 +142,6 @@ className={`
           key={tournament.id}
           tournament={tournament}
           variant="card"
-          className="border-b border-r border-gray-200 dark:border-gray-800 last:border-r-0 sm:last:border-r lg:last:border-r-0"
         />
       ))}
 </div>
