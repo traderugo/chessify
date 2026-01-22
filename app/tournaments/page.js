@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 
-import TournamentListItem from "@/components/tournament/TournamentListItem";
+import TournamentListItemCompact from "@/components/tournament/TournamentListItemCompact";
 import TournamentTabs from "@/components/tournament/TournamentTabs";
 import CreateTournamentButton from "@/components/tournament/CreateTournamentButton";
 
@@ -131,7 +131,7 @@ if (user && filter === "joined") {
       </div>
 
       {/* LIST */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div className="max-w-4xl mx-auto px-1 sm:px-2 lg:px-4 mt-3">
           <div className="divide-y divide-gray-200 dark:divide-gray-800  overflow-y-auto">
             {tournaments.length === 0 ? (
               <div className="p-12 text-center text-gray-500 dark:text-gray-400">
@@ -139,7 +139,7 @@ if (user && filter === "joined") {
               </div>
             ) : (
               tournaments.map((tournament) => (
-                <TournamentListItem
+                <TournamentListItemCompact
                   key={tournament.id}
                   tournament={tournament}
                 />

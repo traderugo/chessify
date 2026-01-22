@@ -32,65 +32,67 @@ export default function TournamentListItemCompact({
       href={`/tournaments/${tournament.id}`}
       className="
         group block
-        bg-white dark:bg-[#161b22]
-        border border-gray-200 dark:border-gray-800
-        transition-all
-        hover:bg-gray-50 dark:hover:bg-gray-900/40
+        bg-white dark:bg-[#0d1117]
+        hover:bg-gray-50 dark:hover:bg-[#161b22]
+        transition-colors
       "
     >
-      <div className="flex items-center px-4 py-3 gap-3">
+      <div className="flex items-start gap-4 px-5 py-4">
 
-        {/* LEFT INDICATOR */}
+        {/* LEFT ACCENT */}
         <div className="w-1 self-stretch rounded-full bg-blue-500/70" />
+
+       
 
         {/* CONTENT */}
         <div className="flex-1 min-w-0">
 
-          {/* TOP ROW */}
-          <div className="flex items-center gap-2 text-xs font-medium text-blue-600 dark:text-blue-400 mb-0.5">
-            <Trophy size={12} />
+          {/* CATEGORY */}
+          <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">
+            <Trophy size={14} />
             <span className="truncate">{tournament.category}</span>
           </div>
 
           {/* TITLE */}
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
             {tournament.title}
           </h3>
 
           {/* META */}
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
 
-            <span className="flex items-center gap-1">
-              <Wallet size={11} />
+            <span className="flex items-center gap-1.5">
+              <Wallet size={14} />
               ₦{Number(tournament.prize_pool || 0).toLocaleString()}
             </span>
 
             {!compact && (
-              <span className="flex items-center gap-1">
-                <Users size={11} />
+              <span className="flex items-center gap-1.5">
+                <Users size={14} />
                 {tournament.max_participants || "∞"} players
               </span>
             )}
 
-            <span className="flex items-center gap-1">
-              <Calendar size={11} />
+            <span className="flex items-center gap-1.5">
+              <Calendar size={14} />
               Starts {startDate}
             </span>
 
             <span className="truncate">
-              Hosted on <span className="font-medium">{tournament.platform? tournament.platform : "N/A"}</span>
+              Hosted by{" "}
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                {tournament.host_name}
+              </span>
             </span>
 
-            <span>
-              Created {createdAt}
-            </span>
+            <span>Created {createdAt}</span>
           </div>
         </div>
 
         {/* CHEVRON */}
         <ChevronRight
-          size={16}
-          className="text-gray-300 group-hover:text-blue-500 transition-colors"
+          size={18}
+          className="mt-2 text-gray-300 group-hover:text-blue-500 transition-colors"
         />
       </div>
     </Link>
