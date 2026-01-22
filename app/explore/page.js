@@ -55,11 +55,11 @@ export default async function ExplorePage({ searchParams }) {
 
   // ── Strategic presentation ──────────────────────────────────────
   return (
+    
     <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100">
-
       {/* Hero / Filter Bar */}
 {/* HERO / FILTER BAR */}
-<div className="relative bg-gradient-to-br from-blue-800 to-blue-800 text-white">
+<div className="relative bg-gradient-to-br from-blue-600 to-blue-600 text-white">
   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.15),transparent_60%)]" />
   
   <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-6">
@@ -124,7 +124,7 @@ className={`
       </div>
 
       {/* Main Content */}
-      <div className="relative max-w-6xl mx-auto mt-3  sm:px-6 lg:px-8 pb-20">
+      <div className="relative max-w-6xl mx-auto md:mt-3  sm:px-6 lg:px-8 pb-20">
         {tournaments?.length === 0 ? (
           <div className="py-32 text-center">
             <p className="text-xl text-gray-500 dark:text-gray-400">
@@ -132,7 +132,7 @@ className={`
             </p>
           </div>
         ) : (
-<div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+<div className="grid md:gap-2 sm:grid-cols-2 lg:grid-cols-3">
   {isLoading
     ? Array.from({ length: 6 }).map((_, i) => (
         <TournamentCardSkeleton key={i} />
