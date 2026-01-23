@@ -47,68 +47,88 @@ export default function TournamentActions({
 
   const canLeave = isRegistered && tournamentStatus === 'upcoming'
 
+  const cardBase = `
+    rounded-xl
+    border border-white/10
+    backdrop-blur
+    p-4
+    flex flex-col items-center justify-center
+    text-sm font-semibold
+    transition
+    hover:scale-[1.03]
+    text-white
+  `
+
   return (
-    <div className="px-5 mt-10 max-w-6xl mx-auto space-y-4">
+    <div className="px-5 mt-10 max-w-6xl mx-auto space-y-6">
 
-      {/* PRIMARY */}
-      {!isRegistered ? (
+      {/* PRIMARY ACTIONS */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+        {/* JOIN / REGISTERED */}
+        {!isRegistered ? (
+          <a
+            href={`/tournaments/${tournamentId}/join`}
+            className={`${cardBase} bg-gradient-to-br from-blue-600 to-blue-700`}
+          >
+            Join
+          </a>
+        ) : (
+          <div
+            className={`${cardBase} bg-gradient-to-br from-green-500 to-green-600 text-green-600 cursor-default`}
+          >
+            <CheckCircle size={18} className="mb-1" />
+            Registered
+          </div>
+        )}
+
+        {/* RESULTS */}
         <a
-          href={`/tournaments/${tournamentId}/join`}
-          className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold text-center transition"
+          href={`/tournaments/${tournamentId}/results`}
+          className={`${cardBase} bg-gradient-to-br from-gray-700 to-gray-800`}
         >
-          Join Tournament
+          View Results
         </a>
-      ) : (
-        <div className="w-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 py-3 rounded-xl flex items-center justify-center gap-2 font-semibold">
-          <CheckCircle size={18} />
-          Registered
-        </div>
-      )}
 
-      {/* LEAVE */}
-      {canLeave && (
-        <button
-          onClick={handleLeave}
-          disabled={leaving}
-          className="w-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-700 dark:text-yellow-400 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-yellow-500/20 transition disabled:opacity-50"
-        >
-          <LogOut size={16} />
-          {leaving ? 'Leaving…' : 'Leave Tournament'}
-        </button>
-      )}
+        {/* LEAVE */}
+        {canLeave && (
+          <button
+            onClick={handleLeave}
+            disabled={leaving}
+            className={`${cardBase} bg-gradient-to-br from-yellow-500 to-yellow-600 text-gray-600 disabled:opacity-50`}
+          >
+            <LogOut size={16} className="mb-1" />
+            {leaving ? 'Leaving…' : 'Leave'}
+          </button>
+        )}
+      </div>
 
-      {/* RESULTS */}
-      <a
-        href={`/tournaments/${tournamentId}/results`}
-        className="block w-full bg-white/80 dark:bg-[#121826] border border-gray-200 dark:border-white/10 py-3 rounded-xl text-center font-semibold hover:bg-white transition"
-      >
-        View Results
-      </a>
-
-      {/* HOST */}
+      {/* HOST CONTROLS */}
       {isHost && (
-        <div className="pt-5 space-y-3">
-          <div className="text-xs uppercase tracking-wide text-gray-400 font-bold">
+        <div className="space-y-3">
+          <div className="uppercase tracking-wide text-gray-400 font-bold">
             Host Controls
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+
             <a
               href={`/tournaments/${tournamentId}/edit`}
-              className="bg-white/80 dark:bg-[#121826] border border-gray-200 dark:border-white/10 py-3 rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-white transition"
+              className={`${cardBase} bg-gradient-to-br text-white from-blue-500 to-blue-600`}
             >
-              <Edit size={16} />
+              <Edit size={16} className="mb-1" />
               Edit
             </a>
 
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 py-3 rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-red-500/20 transition disabled:opacity-50"
+              className={`${cardBase} bg-gradient-to-br from-red-500 to-red-600 text-white disabled:opacity-50`}
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} className="mb-1" />
               {deleting ? 'Deleting…' : 'Delete'}
             </button>
+
           </div>
         </div>
       )}

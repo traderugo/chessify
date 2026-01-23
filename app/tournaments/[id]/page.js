@@ -1,5 +1,8 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import {
   Trophy,
@@ -26,127 +29,156 @@ function calculateTournamentStatus(tournament) {
   return 'upcoming'
 }
 
-async function getTournamentData(id) {
-  const supabase = await createSupabaseServer()
+export default function TournamentDetailsPage({ params }) {
+  const [id, setId] = useState(null)
+  const [tournament, setTournament] = useState(null)
+  const [hostProfile, setHostProfile] = useState(null)
+  const [prizePool, setPrizePool] = useState(0)
+  const [participants, setParticipants] = useState(0)
+  const [isHost, setIsHost] = useState(false)
+  const [isRegistered, setIsRegistered] = useState(false)
+  const [actualStatus, setActualStatus] = useState('upcoming')
+  const [loading, setLoading] = useState(true)
 
-  const { data: tournament } = await supabase
-    .from('tournaments')
-    .select('*')
-    .eq('id', id)
-    .single()
+  useEffect(() => {
+    params.then(p => setId(p.id))
+  }, [params])
+
+  useEffect(() => {
+    if (!id) return
+
+    const fetchTournamentData = async () => {
+      const supabase = createClient()
+
+      const { data: tournament } = await supabase
+        .from('tournaments')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (!tournament) {
+        notFound()
+        return
+      }
+
+      setTournament(tournament)
+
+      let hostProfile = null
+      if (tournament.host_id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, chess_com_username')
+          .eq('id', tournament.host_id)
+          .single()
+
+        hostProfile = profile
+        setHostProfile(profile)
+      }
+
+      const prizePool = tournament.prize_pool || 0
+      setPrizePool(prizePool)
+
+      const { count: participantCount } = await supabase
+        .from('tournament_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('tournament_id', id)
+
+      setParticipants(participantCount || 0)
+
+      const { data: { user } } = await supabase.auth.getUser()
+
+      let isRegistered = false
+      if (user) {
+        const { data: entry } = await supabase
+          .from('tournament_participants')
+          .select('id')
+          .eq('tournament_id', id)
+          .eq('profile_id', user.id)
+          .maybeSingle()
+
+        isRegistered = !!entry
+        setIsRegistered(isRegistered)
+        setIsHost(user?.id === tournament.host_id)
+      }
+
+      setActualStatus(calculateTournamentStatus(tournament))
+      setLoading(false)
+    }
+
+    fetchTournamentData()
+  }, [id])
+
+  useEffect(() => {
+    if (!tournament) return
+
+    // Update status every second to check for transitions
+    const statusInterval = setInterval(() => {
+      const newStatus = calculateTournamentStatus(tournament)
+      if (newStatus !== actualStatus) {
+        setActualStatus(newStatus)
+      }
+    }, 1000)
+
+    return () => clearInterval(statusInterval)
+  }, [tournament, actualStatus])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#eef3fb] to-[#f9fbff] dark:from-black dark:to-[#0b0f1a] flex items-center justify-center">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      </div>
+    )
+  }
 
   if (!tournament) return null
 
-  let hostProfile = null
-  if (tournament.host_id) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('full_name, chess_com_username')
-      .eq('id', tournament.host_id)
-      .single()
-
-    hostProfile = profile
-  }
-
-  const prizePool = tournament.prize_pool || 0
-
-  const { count: participants } = await supabase
-    .from('tournament_participants')
-    .select('*', { count: 'exact', head: true })
-    .eq('tournament_id', id)
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  let isRegistered = false
-  if (user) {
-    const { data: entry } = await supabase
-      .from('tournament_participants')
-      .select('id')
-      .eq('tournament_id', id)
-      .eq('profile_id', user.id)
-      .maybeSingle()
-
-    isRegistered = !!entry
-  }
-
-  return {
-    tournament,
-    hostProfile,
-    prizePool,
-    participants: participants || 0,
-    isHost: user?.id === tournament.host_id,
-    isRegistered,
-    actualStatus: calculateTournamentStatus(tournament),
-  }
-}
-
-export default async function TournamentDetailsPage({ params }) {
-  const { id } = await params
-  const data = await getTournamentData(id)
-
-  if (!data) notFound()
-
-  const {
-    tournament,
-    hostProfile,
-    prizePool,
-    participants,
-    isHost,
-    isRegistered,
-    actualStatus,
-  } = data
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eef3fb] to-[#f9fbff] dark:from-black dark:to-[#0b0f1a] pb-8">
-           <div className="px-5 pt-2 max-w-6xl mx-auto">
-        <div className="rounded-md bg-white/80 dark:bg-[#121826]  shadow-md p-2 space-y-4">
-      {/* ANNOUNCEMENT MARQUEE */}
-<div className="max-w-6xl mx-auto overflow-hidden">
-  <div className={`
-    relative border border-gray-500 rounded-lg shadow-md overflow-hidden
-    ${actualStatus === 'upcoming' && 'bg-blue-50 border-blue-100 dark:bg-blue-900/20 dark:border-blue-500/20'}
-    ${actualStatus === 'live' && 'bg-green-50 border-green-100 dark:bg-green-900/20 dark:border-green-500/20'}
-    ${actualStatus === 'completed' && 'bg-gray-100 border-gray-200 dark:bg-white/5 dark:border-white/10'}
-  `}>
-    <div className="whitespace-nowrap flex items-center animate-marquee px-4 py-2">
+      <div className="px-5 pt-2 max-w-6xl mx-auto">
+        <div className="rounded-md bg-white/80 dark:bg-[#121826] shadow-md p-4 space-y-4">
+          {/* ANNOUNCEMENT MARQUEE */}
+          <div className="max-w-6xl mx-auto overflow-hidden">
+            <div className={`
+              relative border border-gray-500 shadow-md overflow-hidden
+              ${actualStatus === 'upcoming' && 'bg-blue-50 border-blue-100 dark:bg-blue-900/20 dark:border-blue-500/20'}
+              ${actualStatus === 'live' && 'bg-green-50 border-green-100 dark:bg-green-900/20 dark:border-green-500/20'}
+              ${actualStatus === 'completed' && 'bg-gray-100 border-gray-200 dark:bg-white/5 dark:border-white/10'}
+            `}>
+              <div className="whitespace-nowrap flex items-center animate-marquee px-4 py-2">
+                {actualStatus === 'upcoming' && (
+                  <>
+                    <MarqueeItem>Upcoming tournament — register before it starts</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Entry fees are refundable until kickoff</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Review rules before playing</MarqueeItem>
+                  </>
+                )}
 
-      {actualStatus === 'upcoming' && (
-        <>
-          <MarqueeItem>Upcoming tournament — register before it starts</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Entry fees are refundable until kickoff</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Review rules before playing</MarqueeItem>
-        </>
-      )}
+                {actualStatus === 'live' && (
+                  <>
+                    <MarqueeItem>Tournament is live — matches in progress</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Leaderboard updates in real time</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Fair play rules are strictly enforced</MarqueeItem>
+                  </>
+                )}
 
-      {actualStatus === 'live' && (
-        <>
-          <MarqueeItem>Tournament is live — matches in progress</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Leaderboard updates in real time</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Fair play rules are strictly enforced</MarqueeItem>
-        </>
-      )}
+                {actualStatus === 'completed' && (
+                  <>
+                    <MarqueeItem>Tournament completed</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Final standings are available</MarqueeItem>
+                    <Separator />
+                    <MarqueeItem>Prizes will be distributed shortly</MarqueeItem>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
 
-      {actualStatus === 'completed' && (
-        <>
-          <MarqueeItem>Tournament completed</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Final standings are available</MarqueeItem>
-          <Separator />
-          <MarqueeItem>Prizes will be distributed shortly</MarqueeItem>
-        </>
-      )}
-
-    </div>
-  </div>
-</div>
-
-      {/* HERO CARD */}
-
-
+          {/* HERO CARD */}
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-2 text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 px-3 py-1 rounded-full">
               <Trophy size={14} />
@@ -167,78 +199,75 @@ export default async function TournamentDetailsPage({ params }) {
               {hostProfile?.full_name || 'Unknown Host'}
             </span>
             {hostProfile?.chess_com_username && (
-              <span className="block text-xs text-gray-400">
+              <span className="block text-gray-400">
                 @{hostProfile.chess_com_username}
               </span>
             )}
           </div>
 
-          <TournamentCountdown startDate={tournament.start_date} />
+          {/* Show countdown or completed message based on status */}
+          {actualStatus === 'completed' ? (
+            <CompletedMessage endDate={tournament.end_date} />
+          ) : (
+            <TournamentCountdown startDate={tournament.start_date} endDate={tournament.end_date} />
+          )}
         </div>
       </div>
 
-    {/* STATS BAR */}
-<div className="px-5 mt-3 max-w-6xl mx-auto">
-  <div className="flex justify-between items-center bg-white/80 dark:bg-[#121826] backdrop-blur border border-gray-200 dark:border-white/10 rounded-md px-5 py-4 shadow-sm">
+      {/* STATS BAR */}
+      <div className="px-5 mt-3 max-w-6xl mx-auto">
+        <div className="flex justify-between items-center bg-white/80 dark:bg-[#121826] backdrop-blur border border-gray-200 dark:border-white/10 rounded-md px-5 py-4 shadow-sm">
+          <StatInline
+            icon={<Calendar size={16} />}
+            label="Entry Fee"
+            value={
+              tournament.entry_fee === 0
+                ? 'Free'
+                : `${tournament.currency} ${(tournament.entry_fee / 100).toFixed(2)}`
+            }
+          />
 
+          <Divider />
+          
+          <StatInline
+            icon={<Wallet size={16} />}
+            label="Prize Pool"
+            value={`${tournament.currency} ${(prizePool / 100).toFixed(2)}`}
+          />
 
-    <StatInline
-      icon={<Calendar size={16} />}
-      label="Entry Fee"
-      value={
-        tournament.entry_fee === 0
-          ? 'Free'
-          : `${tournament.currency} ${(tournament.entry_fee / 100).toFixed(2)}`
-      }
-    />
+          <Divider />
 
-    <Divider />
-    
-    <StatInline
-      icon={<Wallet size={16} />}
-      label="Prize Pool"
-      value={`${tournament.currency} ${(prizePool / 100).toFixed(2)}`}
-    />
+          <StatInline
+            icon={<Users size={16} />}
+            label="Players"
+            value={participants}
+          />
+        </div>
+      </div>
 
-    <Divider />
+      {/* LEADERBOARD */}
+      <div className="px-5 mt-6 max-w-6xl mx-auto">
+        <Link href={`/tournaments/${id}/leaderboard`}>
+          <div className="group cursor-pointer rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 p-5 text-white shadow-md hover:shadow-lg transition">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Trophy className="w-6 h-6 opacity-90" />
+                <div>
+                  <div className="text-base font-bold">Leaderboard</div>
+                  <p className="text-sm text-white/80">
+                     Click here to view participants
+                  </p>
+                </div>
+              </div>
 
-    <StatInline
-      icon={<Users size={16} />}
-      label="Players"
-      value={participants}
-    />
-
-
-
-    
-  </div>
-</div>
-
-
-{/* LEADERBOARD */}
-<div className="px-5 mt-6 max-w-6xl mx-auto">
-  <Link href={`/tournaments/${id}/leaderboard`}>
-    <div className="group cursor-pointer rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 p-5 text-white shadow-md hover:shadow-lg transition">
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Trophy className="w-6 h-6 opacity-90" />
-          <div>
-            <div className="text-base font-bold">Leaderboard</div>
-            <p className="text-sm text-white/80">
-              {participants} players competing
-            </p>
+              {/* LINK AFFORDANCE */}
+              <ArrowRight
+                className="w-5 h-5 opacity-80 transform transition-transform group-hover:translate-x-1"
+              />
+            </div>
           </div>
-        </div>
-
-        {/* LINK AFFORDANCE */}
-        <ArrowRight
-          className="w-5 h-5 opacity-80 transform transition-transform group-hover:translate-x-1"
-        />
+        </Link>
       </div>
-    </div>
-  </Link>
-</div>
 
       {/* DESCRIPTION */}
       <div className="px-5 mt-6 max-w-6xl mx-auto">
@@ -296,3 +325,69 @@ function Separator() {
   )
 }
 
+function CompletedMessage({ endDate }) {
+  const [timeAgo, setTimeAgo] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!endDate || !mounted) return
+
+    const calculateTimeAgo = () => {
+      const now = Date.now()
+      const end = new Date(endDate).getTime()
+      const diff = now - end
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+      const minutes = Math.floor((diff / (1000 * 60)) % 60)
+
+      let message = ''
+      
+      if (days > 0) {
+        message += `${days} day${days === 1 ? '' : 's'} ago`
+      } else if (hours > 0) {
+        message += `${hours} hour${hours === 1 ? '' : 's'} ago`
+      } else if (minutes > 0) {
+        message += `${minutes} minute${minutes === 1 ? '' : 's'} ago`
+      } else {
+        message += 'just now'
+      }
+
+      setTimeAgo(message)
+    }
+
+    calculateTimeAgo()
+    const interval = setInterval(calculateTimeAgo, 60000) // Update every minute
+
+    return () => clearInterval(interval)
+  }, [endDate, mounted])
+
+  if (!mounted) {
+    return (
+      <div className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-gray-100 p-4 sm:p-6 rounded-lg">
+        <p className="text-sm mb-3 font-medium uppercase tracking-wide opacity-70">Ended</p>
+        <div className="bg-black text-white p-4 sm:p-6 rounded-lg">
+          <div className="text-center">
+            <p className="text-3xl sm:text-4xl md:text-5xl font-bold">COMPLETED</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-gray-100 p-4 sm:p-6 rounded-lg">
+      <p className="text-sm mb-3 font-medium uppercase tracking-wide opacity-70">Ended</p>
+      <div className="bg-black text-white p-4 sm:p-6 rounded-lg">
+        <div className="text-center">
+          <p className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">COMPLETED</p>
+          <p className="text-sm sm:text-base opacity-70">{timeAgo}</p>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function TournamentCountdown({ startDate, endDate }) {
   const [status, setStatus] = useState('waiting')
   const [timeDisplay, setTimeDisplay] = useState({ d: 0, h: 0, m: 0, s: 0 })
   const [completedDate, setCompletedDate] = useState('')
   const [mounted, setMounted] = useState(false)
+  const intervalRef = useRef(null)
 
   useEffect(() => {
     setMounted(true)
@@ -20,8 +21,9 @@ export default function TournamentCountdown({ startDate, endDate }) {
       const start = new Date(startDate).getTime()
       const end = endDate ? new Date(endDate).getTime() : null
 
-      // Check if tournament has ended
+      // Check if tournament has ended (only if endDate exists)
       if (end && now >= end) {
+        // Calculate time SINCE end (not continuing to count from start)
         const diff = now - end
         const d = Math.floor(diff / (1000 * 60 * 60 * 24))
         const h = Math.floor((diff / (1000 * 60 * 60)) % 24)
@@ -37,7 +39,13 @@ export default function TournamentCountdown({ startDate, endDate }) {
         setStatus('completed')
         setTimeDisplay({ d, h, m, s })
         setCompletedDate(formattedEndDate)
-        return false
+        
+        // Clear interval when completed - stop counting
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current)
+          intervalRef.current = null
+        }
+        return
       }
 
       // Check if tournament is in progress
@@ -50,7 +58,7 @@ export default function TournamentCountdown({ startDate, endDate }) {
 
         setStatus('inProgress')
         setTimeDisplay({ d, h, m, s })
-        return false
+        return
       }
 
       // Tournament hasn't started yet
@@ -62,18 +70,22 @@ export default function TournamentCountdown({ startDate, endDate }) {
 
       setStatus('upcoming')
       setTimeDisplay({ d, h, m, s })
-      return false
     }
 
     // Initial update
     updateDisplay()
 
     // Set up interval
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       updateDisplay()
     }, 1000)
 
-    return () => clearInterval(interval)
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+    }
   }, [startDate, endDate, mounted])
 
   const getStatusConfig = () => {
@@ -86,7 +98,7 @@ export default function TournamentCountdown({ startDate, endDate }) {
         }
       case 'inProgress':
         return {
-          label: 'In progress',
+          label: endDate ? 'Time elapsed' : 'In progress',
           bgColor: 'bg-green-100',
           textColor: 'text-green-900'
         }
@@ -144,7 +156,7 @@ export default function TournamentCountdown({ startDate, endDate }) {
       <p className="text-sm mb-3 font-medium uppercase tracking-wide opacity-70">{config.label}</p>
       
       <div className="bg-black text-white p-4 sm:p-6 rounded-lg">
-        {status === 'completed' && completedDate ? (
+        {status === 'completed' ? (
           <div className="text-center">
             <p className="text-lg sm:text-2xl font-bold break-words mb-4">{completedDate}</p>
             <div className="flex items-center justify-center gap-2 sm:gap-4 opacity-60">
