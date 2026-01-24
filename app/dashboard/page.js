@@ -144,7 +144,7 @@ export default function Dashboard() {
           </div>
 
 {/* STATS */}
-<div className="bg-white dark:bg-[#161b22] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div className="bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm">
   <div className="flex divide-x divide-gray-200 dark:divide-gray-800">
     <InlineStat icon={<Wallet size={18} />} value="₦0" label="Paid Out" />
     <InlineStat icon={<Users size={18} />} value="3" label="Players" />
@@ -153,10 +153,9 @@ export default function Dashboard() {
   </div>
 </div>
 
-
-          {/* QUICK ACTIONS */}
-<section className="">
-  <h2 className="text-lg font-bold  mb-2">
+{/* QUICK ACTIONS */}
+<div className="bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm p-5">
+  <h2 className="text-lg font-bold mb-4">
     Quick Actions
   </h2>
 
@@ -177,57 +176,55 @@ export default function Dashboard() {
       title="Join"
     />
   </div>
-</section>
+</div>
 
         </div>
 
-        {/* RIGHT SIDEBAR */}
-        <div className="space-y-6">
+       <div className="bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm p-5 space-y-4">
 
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg">My Tournaments</h3>
-            <Link
-              href="/tournaments"
-              className="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1"
-            >
-              View all
-              <ChevronRight size={16} />
-            </Link>
-          </div>
+  <div className="flex items-center justify-between">
+    <h3 className="font-bold text-lg">My Tournaments</h3>
+    <Link
+      href="/tournaments"
+      className="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1"
+    >
+      View all
+      <ChevronRight size={16} />
+    </Link>
+  </div>
 
-          <div className="bg-white dark:bg-[#161b22] ">
-            {loadingTournaments ? (
-              <div className="py-10 text-center text-gray-500">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto" />
-              </div>
-            ) : tournaments.length === 0 ? (
-              <div className="py-12 text-center">
-                <div className="w-14 h-14 mx-auto rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
-                  <Trophy className="text-gray-400" />
-                </div>
-                <p className="text-sm text-gray-500">
-                  No tournaments yet
-                </p>
-                <Link
-                  href="/tournaments/create"
-                  className="inline-block mt-3 text-sm text-blue-600 hover:underline"
-                >
-                  Create one →
-                </Link>
-              </div>
-            ) : (
-              <div className="divide-y divide-gray-200 dark:divide-gray-800 max-h-[320px] overflow-y-auto">
-                {tournaments.map((tournament) => (
-                  <TournamentListItem
-                    key={tournament.id}
-                    tournament={tournament}
-                    compact
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+  {loadingTournaments ? (
+    <div className="py-10 text-center text-gray-500">
+      <Loader2 className="w-8 h-8 animate-spin mx-auto" />
+    </div>
+  ) : tournaments.length === 0 ? (
+    <div className="py-12 text-center">
+      <div className="w-14 h-14 mx-auto rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+        <Trophy className="text-gray-400" />
+      </div>
+      <p className="text-sm text-gray-500">
+        No tournaments yet
+      </p>
+      <Link
+        href="/tournaments/create"
+        className="inline-block mt-3 text-sm text-blue-600 hover:underline"
+      >
+        Create one →
+      </Link>
+    </div>
+  ) : (
+    <div className="divide-y divide-gray-200 dark:divide-gray-800 max-h-[320px] overflow-y-auto -mx-5">
+      {tournaments.map((tournament) => (
+        <TournamentListItem
+          key={tournament.id}
+          tournament={tournament}
+          compact
+        />
+      ))}
+    </div>
+  )}
+</div>
+
       </div>
     </div>
   </div>
@@ -246,24 +243,26 @@ function InlineStat({ icon, value, label }) {
 
 function QuickActionCard({ href, icon, title }) {
   return (
-    <Link href={href}>
+    <Link href={href} className="flex flex-col items-center gap-2">
       <div
         className="
-          rounded-xl
-          bg-gradient-to-br from-blue-600 to-blue-600 
-          backdrop-blur
-          border border-white/10
-          p-5
-          flex flex-col items-center
+          w-16 h-16
+          rounded-full
+          bg-blue-100
+          flex items-center justify-center
+          shadow-md
           transition
-          hover:scale-[1.04]
-          text-white
+          hover:scale-105
         "
       >
-        <div className="mb-2 text-white">{icon}</div>
-        <span className="text-sm font-semibold">{title}</span>
+        <div className="text-blue-600 text-[28px]">
+          {icon}
+        </div>
       </div>
-    </Link>
-  );
-}
 
+      <span className="text-sm font-semibold text-gray-700 text-center">
+        {title}
+      </span>
+    </Link>
+  )
+}

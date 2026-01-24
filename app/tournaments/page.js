@@ -106,9 +106,8 @@ if (user && filter === "joined") {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black pb-12">
       {/* HEADER */}
-      <div className="px-4 py-5 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+<div className="px-4 py-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117]">
         <h1 className="text-xl font-bold">Tournaments</h1>
-        <CreateTournamentButton />
       </div>
 
 {/* BACK TO DASHBOARD */}
@@ -125,28 +124,34 @@ if (user && filter === "joined") {
   </Link>
 </div>
 
-      {/* TABS */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <TournamentTabs active={filter} showUserTabs={!!user} />
-      </div>
+     {/* TABS + LIST CARD */}
+<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+  <div className="bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
 
-      {/* LIST */}
-      <div className="max-w-4xl mx-auto px-1 sm:px-2 lg:px-4 mt-3">
-          <div className="divide-y divide-gray-200 dark:divide-gray-800  overflow-y-auto">
-            {tournaments.length === 0 ? (
-              <div className="p-12 text-center text-gray-500 dark:text-gray-400">
-                No tournaments found
-              </div>
-            ) : (
-              tournaments.map((tournament) => (
-                <TournamentListItemCompact
-                  key={tournament.id}
-                  tournament={tournament}
-                />
-              ))
-            )}
-          </div>
-      </div>
+    {/* WHATSAPP-STYLE TABS */}
+    <div className="border-b border-gray-200 dark:border-gray-800">
+      <TournamentTabs active={filter} showUserTabs={!!user} />
+    </div>
+
+    {/* LIST */}
+    <div className="divide-y divide-gray-200 dark:divide-gray-800">
+      {tournaments.length === 0 ? (
+        <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+          No tournaments found
+        </div>
+      ) : (
+        tournaments.map((tournament) => (
+          <TournamentListItemCompact
+            key={tournament.id}
+            tournament={tournament}
+          />
+        ))
+      )}
+    </div>
+
+  </div>
+</div>
+
 
       {/* PAGINATION */}
       {totalPages > 1 && (

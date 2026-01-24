@@ -14,6 +14,9 @@ import {
 } from 'lucide-react'
 import TournamentCountdown from '@/components/tournament/TournamentCountdown'
 import TournamentActions from '@/components/tournament/TournamentActions'
+import TournamentComments from '@/components/tournament/TournamentComments'
+
+
 
 function calculateTournamentStatus(tournament) {
   const now = new Date()
@@ -204,6 +207,28 @@ export default function TournamentDetailsPage({ params }) {
               </span>
             )}
           </div>
+          {/* Quick Stats */}
+                        <div className="flex flex-wrap items-center gap-4 text-sm">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <Calendar className="w-4 h-4" />
+                            <span>
+                              {new Date(tournament.start_date).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                            </span>
+                          </div>
+                          
+                          <div className="h-4 w-px bg-gray-300 dark:bg-gray-600" />
+                          
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <Users className="w-4 h-4" />
+                            <span>{participants} participant{participants !== 1 ? 's' : ''}</span>
+                          </div>
+          
+                          <div className="h-4 w-px bg-gray-300 dark:bg-gray-600" />
+                        </div>
 
           {/* Show countdown or completed message based on status */}
           {actualStatus === 'completed' ? (
@@ -245,32 +270,8 @@ export default function TournamentDetailsPage({ params }) {
         </div>
       </div>
 
-      {/* LEADERBOARD */}
-      <div className="px-5 mt-6 max-w-6xl mx-auto">
-        <Link href={`/tournaments/${id}/leaderboard`}>
-          <div className="group cursor-pointer rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 p-5 text-white shadow-md hover:shadow-lg transition">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Trophy className="w-6 h-6 opacity-90" />
-                <div>
-                  <div className="text-base font-bold">Leaderboard</div>
-                  <p className="text-sm text-white/80">
-                     Click here to view participants
-                  </p>
-                </div>
-              </div>
-
-              {/* LINK AFFORDANCE */}
-              <ArrowRight
-                className="w-5 h-5 opacity-80 transform transition-transform group-hover:translate-x-1"
-              />
-            </div>
-          </div>
-        </Link>
-      </div>
-
-      {/* DESCRIPTION */}
-      <div className="px-5 mt-6 max-w-6xl mx-auto">
+ {/* DESCRIPTION */}
+      <div className="px-5 mt-3 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] backdrop-blur-xl shadow p-6 space-y-3">
           <div className="flex items-center gap-2 font-bold text-lg">
             <ScrollText />
@@ -281,6 +282,8 @@ export default function TournamentDetailsPage({ params }) {
           </p>
         </div>
       </div>
+            <div className="px-5 mt-3 max-w-6xl mx-auto">
+        <div className="rounded-md bg-white/80 dark:bg-[#121826] backdrop-blur-xl shadow p-3 space-y-3">
 
       {/* ACTIONS */}
       <TournamentActions
@@ -289,6 +292,11 @@ export default function TournamentDetailsPage({ params }) {
         isRegistered={isRegistered}
         tournamentStatus={actualStatus}
       />
+
+      </div>
+      </div>
+      {/* COMMENTS PREVIEW - Shows last 2 comments */}
+      <TournamentComments tournamentId={id} isHost={isHost} previewMode={true} />
     </div>
   )
 }
@@ -369,7 +377,7 @@ function CompletedMessage({ endDate }) {
   if (!mounted) {
     return (
       <div className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-gray-100 p-4 sm:p-6 rounded-lg">
-        <p className="text-sm mb-3 font-medium uppercase tracking-wide opacity-70">Ended</p>
+        <p className="text-sm mb-3 font-medium uppercase tracking-wide opacity-70">Check leaderboard for winners</p>
         <div className="bg-black text-white p-4 sm:p-6 rounded-lg">
           <div className="text-center">
             <p className="text-3xl sm:text-4xl md:text-5xl font-bold">COMPLETED</p>
@@ -391,3 +399,4 @@ function CompletedMessage({ endDate }) {
     </div>
   )
 }
+

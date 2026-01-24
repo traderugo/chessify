@@ -1,6 +1,6 @@
 'use client'
 
-import { Edit, Trash2, LogOut, CheckCircle } from 'lucide-react'
+import { Edit, Trash2, LogOut, CheckCircle, Trophy, UserPlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useState } from 'react'
@@ -47,47 +47,58 @@ export default function TournamentActions({
 
   const canLeave = isRegistered && tournamentStatus === 'upcoming'
 
-  const cardBase = `
-    rounded-xl
-    border border-white/10
-    backdrop-blur
-    p-4
-    flex flex-col items-center justify-center
+  const actionBase = `
+    flex flex-col items-center
+    gap-2
     text-sm font-semibold
+    text-gray-700
     transition
-    hover:scale-[1.03]
-    text-white
+  `
+
+  const circleBase = `
+    w-16 h-16
+    rounded-full
+    flex items-center justify-center
+    shadow-md
+    transition
+    hover:scale-105
   `
 
   return (
-    <div className="px-5 mt-10 max-w-6xl mx-auto space-y-6">
+    <div className="px-5 mt-3 max-w-6xl mx-auto space-y-10">
 
       {/* PRIMARY ACTIONS */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-6 justify-items-center">
 
         {/* JOIN / REGISTERED */}
         {!isRegistered ? (
           <a
             href={`/tournaments/${tournamentId}/join`}
-            className={`${cardBase} bg-gradient-to-br from-blue-600 to-blue-700`}
+            className={actionBase}
           >
-            Join
+            <div className={`${circleBase} bg-blue-100`}>
+              <UserPlus size={30} className="text-blue-600" />
+            </div>
+            <span>Join</span>
           </a>
         ) : (
-          <div
-            className={`${cardBase} bg-gradient-to-br from-green-500 to-green-600 text-green-600 cursor-default`}
-          >
-            <CheckCircle size={18} className="mb-1" />
-            Registered
+          <div className={actionBase}>
+            <div className={`${circleBase} bg-green-100`}>
+              <CheckCircle size={30} className="text-green-600" />
+            </div>
+            <span>Registered</span>
           </div>
         )}
 
         {/* RESULTS */}
         <a
           href={`/tournaments/${tournamentId}/results`}
-          className={`${cardBase} bg-gradient-to-br from-gray-700 to-gray-800`}
+          className={actionBase}
         >
-          View Results
+          <div className={`${circleBase} bg-gray-100`}>
+            <Trophy size={30} className="text-gray-700" />
+          </div>
+          <span>Results</span>
         </a>
 
         {/* LEAVE */}
@@ -95,38 +106,44 @@ export default function TournamentActions({
           <button
             onClick={handleLeave}
             disabled={leaving}
-            className={`${cardBase} bg-gradient-to-br from-yellow-500 to-yellow-600 text-gray-600 disabled:opacity-50`}
+            className={`${actionBase} disabled:opacity-50`}
           >
-            <LogOut size={16} className="mb-1" />
-            {leaving ? 'Leaving…' : 'Leave'}
+            <div className={`${circleBase} bg-yellow-100`}>
+              <LogOut size={30} className="text-yellow-600" />
+            </div>
+            <span>{leaving ? 'Leaving…' : 'Leave'}</span>
           </button>
         )}
       </div>
 
       {/* HOST CONTROLS */}
       {isHost && (
-        <div className="space-y-3">
-          <div className="uppercase tracking-wide text-gray-400 font-bold">
+        <div className="space-y-4">
+          <div className="uppercase tracking-wide text-gray-400 font-bold text-center">
             Host Controls
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-6 justify-items-center">
 
             <a
               href={`/tournaments/${tournamentId}/edit`}
-              className={`${cardBase} bg-gradient-to-br text-white from-blue-500 to-blue-600`}
+              className={actionBase}
             >
-              <Edit size={16} className="mb-1" />
-              Edit
+              <div className={`${circleBase} bg-blue-100`}>
+                <Edit size={30} className="text-blue-600" />
+              </div>
+              <span>Edit</span>
             </a>
 
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className={`${cardBase} bg-gradient-to-br from-red-500 to-red-600 text-white disabled:opacity-50`}
+              className={`${actionBase} disabled:opacity-50`}
             >
-              <Trash2 size={16} className="mb-1" />
-              {deleting ? 'Deleting…' : 'Delete'}
+              <div className={`${circleBase} bg-red-100`}>
+                <Trash2 size={30} className="text-red-600" />
+              </div>
+              <span>{deleting ? 'Deleting…' : 'Delete'}</span>
             </button>
 
           </div>

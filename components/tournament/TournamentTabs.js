@@ -1,54 +1,38 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function TournamentTabs({ active, showUserTabs }) {
-  const router = useRouter();
+  const tabs = [
+    { key: "all", label: "All" },
+    ...(showUserTabs
+      ? [
+          { key: "created", label: "Created" },
+          { key: "joined", label: "Joined" },
+        ]
+      : []),
+  ];
 
   return (
-    <div className="flex gap-3">
-      <TabButton
-        active={active === "all"}
-        onClick={() => router.push("/tournaments")}
-      >
-        All
-      </TabButton>
+    <div className="flex bg-gray-100 dark:bg-[#0d1117] p-1 rounded-xl mx-3 my-3">
+      {tabs.map((tab) => {
+        const isActive = active === tab.key;
 
-      {showUserTabs && (
-        <>
-          <TabButton
-            active={active === "created"}
-            onClick={() => router.push("/tournaments?filter=created")}
+        return (
+          <Link
+            key={tab.key}
+            href={`/tournaments?filter=${tab.key}`}
+            className={`
+              flex-1 text-center py-2 text-sm font-semibold rounded-lg transition
+              ${
+                isActive
+                  ? "bg-white dark:bg-[#161b22] shadow text-blue-600"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
+              }
+            `}
           >
-            Created by me
-          </TabButton>
-
-          <TabButton
-            active={active === "joined"}
-            onClick={() => router.push("/tournaments?filter=joined")}
-          >
-            Joined
-          </TabButton>
-        </>
-      )}
+            {tab.label}
+          </Link>
+        );
+      })}
     </div>
-  );
-}
-
-function TabButton({ active, onClick, children }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        px-4 py-2 rounded-lg font-semibold text-sm transition-colors duration-200
-        ${
-          active
-            ? "bg-blue-600 text-white dark:bg-blue-500 dark:text-white"
-            : "bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-700"
-        }
-      `}
-    >
-      {children}
-    </button>
   );
 }
