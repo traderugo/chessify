@@ -137,7 +137,7 @@ export default function TournamentDetailsPage({ params }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eef3fb] to-[#f9fbff] dark:from-black dark:to-[#0b0f1a] pb-8">
-      <div className="px-5 pt-2 max-w-6xl mx-auto">
+      <div className="px-3 pt-2 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] shadow-md p-4 space-y-4">
           {/* ANNOUNCEMENT MARQUEE */}
           <div className="max-w-6xl mx-auto overflow-hidden">
@@ -240,7 +240,7 @@ export default function TournamentDetailsPage({ params }) {
       </div>
 
       {/* STATS BAR */}
-      <div className="px-5 mt-3 max-w-6xl mx-auto">
+      <div className="px-3 mt-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center bg-white/80 dark:bg-[#121826] backdrop-blur border border-gray-200 dark:border-white/10 rounded-md px-5 py-4 shadow-sm">
           <StatInline
             icon={<Calendar size={16} />}
@@ -271,7 +271,7 @@ export default function TournamentDetailsPage({ params }) {
       </div>
 
  {/* DESCRIPTION */}
-      <div className="px-5 mt-3 max-w-6xl mx-auto">
+      <div className="px-3 mt-3 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] backdrop-blur-xl shadow p-6 space-y-3">
           <div className="flex items-center gap-2 font-bold text-lg">
             <ScrollText />
@@ -282,7 +282,7 @@ export default function TournamentDetailsPage({ params }) {
           </p>
         </div>
       </div>
-            <div className="px-5 mt-3 max-w-6xl mx-auto">
+            <div className="px-3 mt-3 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] backdrop-blur-xl shadow p-3 space-y-3">
 
       {/* ACTIONS */}

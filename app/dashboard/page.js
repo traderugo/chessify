@@ -95,17 +95,17 @@ export default function Dashboard() {
   const formattedBalance = balance !== null ? `₦${(balance / 100).toFixed(2)}` : '₦0.00';
 
  return (
-  <div className="min-h-screen bg-[#eef2f7] dark:bg-black pb-24">
-    <WelcomeCarousel username={username} greeting={greeting} />
+  <div className="min-h-screen bg-[#eef2f7] dark:bg-black pb-8">
 
-    <div className="max-w-6xl mx-auto px-5 sm:px-6 mt-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 ">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
 
         {/* LEFT COLUMN */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-2">
 
           {/* WALLET CARD */}
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-blue-600 to-blue-600 text-white shadow-xl p-6">
+    <WelcomeCarousel username={username} greeting={greeting} />
+          <div className="relative overflow-hidden rounded-md bg-gradient-to-br from-blue-600 via-blue-700 to-blue-700 text-white shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 font-medium">
                 <Wallet className="w-5 h-5" />
@@ -180,7 +180,7 @@ export default function Dashboard() {
 
         </div>
 
-       <div className="bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm p-5 space-y-4">
+       <div className="mt-2 bg-white dark:bg-[#161b22] rounded-md border border-gray-200 dark:border-gray-800 shadow-sm p-5 space-y-4">
 
   <div className="flex items-center justify-between">
     <h3 className="font-bold text-lg">My Tournaments</h3>

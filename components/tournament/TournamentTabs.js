@@ -12,7 +12,7 @@ export default function TournamentTabs({ active, showUserTabs }) {
   ];
 
   return (
-    <div className="flex bg-gray-100 dark:bg-[#0d1117] p-1 rounded-xl mx-3 my-3">
+    <div className="flex bg-gray-100 dark:bg-[#0d1117] p-1 rounded-md mx-1 my-1">
       {tabs.map((tab) => {
         const isActive = active === tab.key;
 
@@ -21,10 +21,10 @@ export default function TournamentTabs({ active, showUserTabs }) {
             key={tab.key}
             href={`/tournaments?filter=${tab.key}`}
             className={`
-              flex-1 text-center py-2 text-sm font-semibold rounded-lg transition
+              flex-1 text-center py-3 text-sm font-semibold rounded-md transition
               ${
                 isActive
-                  ? "bg-white dark:bg-[#161b22] shadow text-blue-600"
+                  ? "bg-white dark:bg-[#161b22]  text-blue-600"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
               }
             `}

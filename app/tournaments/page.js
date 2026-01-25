@@ -106,7 +106,7 @@ if (user && filter === "joined") {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black pb-12">
       {/* HEADER */}
-<div className="px-4 py-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117]">
+<div className="px-2 py-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117]">
         <h1 className="text-xl font-bold">Tournaments</h1>
       </div>
 

@@ -335,7 +335,7 @@ export default function TournamentComments({ tournamentId, isHost, previewMode =
 
   if (loading) {
     return (
-      <div className="px-5 mt-6 max-w-6xl mx-auto">
+      <div className="px-3 mt-3 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] shadow p-6">
           <div className="text-center text-gray-500">Loading comments...</div>
         </div>
@@ -344,7 +344,7 @@ export default function TournamentComments({ tournamentId, isHost, previewMode =
   }
 
   return (
-          <div className="px-5 mt-6 max-w-6xl mx-auto">
+          <div className="px-3 mt-3 max-w-6xl mx-auto">
         <div className="rounded-md bg-white/80 dark:bg-[#121826] backdrop-blur-xl shadow p-6 space-y-3">
         {/* Header */}
         <div className="flex items-center justify-between">

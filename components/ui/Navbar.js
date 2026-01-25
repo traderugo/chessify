@@ -16,6 +16,8 @@ import {
 import { useAuth } from "../providers/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
 import LogoutButton from "@/components/auth/LogoutButton.js";
+import { useUI } from "@/components/providers/UIProvider";
+
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -25,6 +27,8 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 
   const isHome = pathname === "/" || pathname === "/dashboard";
+  const { toggleSidebar } = useUI();
+
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -96,69 +100,12 @@ export default function Navbar() {
                   </div>
                 </button>
 
-                {/* Mobile: Three dots button */}
-                <button
-                  onClick={() => setOpen(!open)}
-                  className="md:hidden w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                  aria-label="Menu"
-                >
-                  <MoreVertical className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </button>
-
-                {/* Dropdown Menu */}
-                {open && (
-                  <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden text-sm z-50">
-                    {/* Header */}
-                    <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-400 to-gray-400 flex items-center justify-center text-white font-bold text-lg">
-                          {user.email?.[0]?.toUpperCase() || "?"}
-                        </div>
-                        <div>
-                          <p className="font-medium">
-                            {user.email.split("@")[0]}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Signed in
-                          </p>
-                        </div>
-                      </div>
-
-                      
-                    </div>
-
-                    {/* Menu Items */}
-                    <div className="py-2">
-                      <DropdownItem href="/profile" icon={<User size={18} />}>
-                        Profile
-                      </DropdownItem>
-                      <DropdownItem href="/dashboard" icon={<Users size={18} />}>
-                        Dashboard
-                      </DropdownItem>
-                      <DropdownItem
-                        href="/subscription"
-                        icon={<LayoutDashboard size={18} />}
-                        badge="PRO"
-                      >
-                        Subscription
-                      </DropdownItem>
-                      <DropdownItem href="/settings" icon={<Settings size={18} />}>
-                        Settings
-                      </DropdownItem>
-                      <DropdownItem href="/help" icon={<HelpCircle size={18} />}>
-                        Help center
-                      </DropdownItem>
-                    </div>
-
-                    {/* Logout */}
-                    <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
-                      <LogoutButton className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition text-sm font-medium text-red-600 dark:text-red-400">
-                        <LogOut size={16} />
-                        Sign out
-                      </LogoutButton>
-                    </div>
-                  </div>
-                )}
+               <button
+  onClick={toggleSidebar}
+  className="md:hidden w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+>
+  <MoreVertical className="w-5 h-5" />
+</button>
               </div>
             </>
           ) : (

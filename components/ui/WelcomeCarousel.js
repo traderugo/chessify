@@ -48,10 +48,10 @@ export default function WelcomeCarousel({ username, greeting }) {
   }, []);
 
   return (
-    <div className="px-4 sm:px-6 pt-4">
+    <div className="mt-2">
       {/* MATCHES PAGE WIDTH — NOT FULL SCREEN */}
       <div className="relative max-w-6xl mx-auto">
-        <div className="relative h-32 sm:h-40 md:h-44 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0f1115]">
+        <div className="relative h-32 sm:h-40 md:h-44 rounded-md overflow-hidden shadow-md border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0f1115]">
           {slides.map((slide, index) => {
             const Icon = slide.icon;
 
