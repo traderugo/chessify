@@ -53,33 +53,19 @@ export default function CostCalculator() {
     const avgMessagesPerUser = 5
     
     const totalBaseOperations = (
-      // Vendor operations
       vendors * 100 + vendors * 200 + vendors * 50 + vendors * 30 + vendors * 20 +
-      // Buyer operations
       buyers * 150 + buyers * 50 + buyers * 30 + buyers * 40 + buyers * 20 +
-      // Image operations
       totalImageViews * 0.3 + totalImages * 2 + totalImages * 0.5 +
-      // Comments
       vendors * avgCommentsPerVendor * 2 + buyers * 10 * 3 + vendors * avgCommentsPerVendor * 0.5 + buyers * 2 +
-      // Ratings
       vendors * avgRatingsPerVendor * 2 + buyers * 8 * 2 + vendors * avgRatingsPerVendor * 1 + vendors * 5 +
-      // Auth
       buyers * 15 + buyers * 0.3 * 8 + buyers * 5 + buyers * 0.1 * 3 + vendors * 10 + vendors * 2 +
-      // Notifications
       buyers * 20 + vendors * 15 + buyers * 5 + buyers * 3 +
-      // Messaging
       (buyers + vendors) * avgMessagesPerUser * 3 + (buyers + vendors) * 10 + (buyers + vendors) * 5 +
-      // Subscriptions
       vendors * 10 + vendors * 2 + vendors * 5 + vendors * 1 +
-      // Admin
       vendors * 0.1 * 100 + 50 + vendors * 0.05 * 20 + 30 +
-      // Affiliate
       vendors * 0.2 * 50 + buyers * 0.1 * 10 + vendors * 0.2 * 20 +
-      // Explore
       buyers * 30 + buyers * 20 + buyers * 15 + buyers * 10 +
-      // Captcha
       (buyers + vendors) * 0.3 * 2 +
-      // Misc
       buyers * 5 + vendors * 3 + 100
     )
     
@@ -171,6 +157,12 @@ export default function CostCalculator() {
     })
   }, [vendors, imagesPerVendor, buyerMultiplier, surgeMode, vendorSubscriptionNaira, exchangeRate, imageSizeKB, imagesViewedMultiplier, constants, surgeMultipliers])
 
+  const copyToClipboard = () => {
+    const summary = document.getElementById('summary-text').innerText
+    navigator.clipboard.writeText(summary)
+    alert('Copied to clipboard!')
+  }
+
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#e6edf3]">
       <div className="max-w-6xl mx-auto px-4 py-6">
@@ -189,45 +181,73 @@ export default function CostCalculator() {
           <h2 className="text-base font-semibold text-white mb-3">Configuration</h2>
           
           <div className="grid md:grid-cols-3 gap-3 mb-3">
-            <InputCard
-              label="Vendors"
-              value={vendors}
-              onChange={setVendors}
-              hint="Total vendors in marketplace"
-            />
-            <InputCard
-              label="Images per Vendor"
-              value={imagesPerVendor}
-              onChange={setImagesPerVendor}
-              hint="Average products per vendor"
-            />
-            <InputCard
-              label="Buyer Multiplier"
-              value={buyerMultiplier}
-              onChange={setBuyerMultiplier}
-              step="0.5"
-              hint={`= ${calculated.buyers?.toLocaleString() || 0} buyers`}
-              hintColor="text-[#58a6ff]"
-            />
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <label className="block text-xs font-medium text-[#7d8590] mb-2">Vendors</label>
+              <input
+                type="number"
+                value={vendors}
+                onChange={(e) => setVendors(parseInt(e.target.value) || 0)}
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1f6feb]"
+                min="0"
+              />
+              <p className="text-xs text-[#7d8590] mt-1">Total vendors in marketplace</p>
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <label className="block text-xs font-medium text-[#7d8590] mb-2">Images per Vendor</label>
+              <input
+                type="number"
+                value={imagesPerVendor}
+                onChange={(e) => setImagesPerVendor(parseInt(e.target.value) || 0)}
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1f6feb]"
+                min="0"
+              />
+              <p className="text-xs text-[#7d8590] mt-1">Average products per vendor</p>
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <label className="block text-xs font-medium text-[#7d8590] mb-2">Buyer Multiplier</label>
+              <input
+                type="number"
+                value={buyerMultiplier}
+                onChange={(e) => setBuyerMultiplier(parseFloat(e.target.value) || 0)}
+                step="0.5"
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1f6feb]"
+                min="0"
+              />
+              <p className="text-xs text-[#58a6ff] mt-1">= {calculated.buyers?.toLocaleString() || 0} buyers</p>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-4 gap-3">
-            <SmallInputCard
-              label="Image Size (KB)"
-              value={imageSizeKB}
-              onChange={setImageSizeKB}
-            />
-            <SmallInputCard
-              label="Views Multiplier"
-              value={imagesViewedMultiplier}
-              onChange={setImagesViewedMultiplier}
-              step="0.5"
-              hint={`= ${calculated.imagesViewedPerBuyer || 0} views/buyer`}
-            />
-            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3 col-span-2">
-              <p className="text-xs font-medium text-[#7d8590] mb-1">Tips</p>
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-2.5">
+              <label className="block text-xs font-medium text-[#7d8590] mb-1.5">Image Size (KB)</label>
+              <input
+                type="number"
+                value={imageSizeKB}
+                onChange={(e) => setImageSizeKB(parseInt(e.target.value) || 0)}
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1f6feb]"
+                min="0"
+              />
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-2.5">
+              <label className="block text-xs font-medium text-[#7d8590] mb-1.5">Views Multiplier</label>
+              <input
+                type="number"
+                value={imagesViewedMultiplier}
+                onChange={(e) => setImagesViewedMultiplier(parseFloat(e.target.value) || 0)}
+                step="0.5"
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1f6feb]"
+                min="0"
+              />
+              <p className="text-xs text-[#7d8590] mt-1">= {calculated.imagesViewedPerBuyer || 0} views/buyer</p>
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-2.5 col-span-2">
+              <p className="text-xs font-medium text-[#7d8590] mb-1">Quick Tips</p>
               <p className="text-xs text-[#7d8590]">
-                Adjust multipliers for different behaviors • Use surge mode for traffic spikes
+                Adjust multipliers for different behaviors • Use surge mode for spikes
               </p>
             </div>
           </div>
@@ -267,42 +287,81 @@ export default function CostCalculator() {
           <h2 className="text-base font-semibold text-white mb-3">Cost Breakdown</h2>
           
           <div className="grid md:grid-cols-3 gap-3">
-            <CostCard
-              title="Cloudflare R2"
-              items={[
-                { label: 'Storage', value: `$${calculated.r2StorageCost}` },
-                { label: 'Egress', value: `$${calculated.r2EgressCost}` },
-              ]}
-              total={(parseFloat(calculated.r2StorageCost || 0) + parseFloat(calculated.r2EgressCost || 0)).toFixed(2)}
-            />
-            
-            <CostCard
-              title="Supabase Core"
-              items={[
-                { label: 'Base Plan', value: `$${calculated.supabasePlan?.toFixed(2)}` },
-                { label: 'DB Compute', value: `$${calculated.supabaseDbComputeCost}` },
-                { label: 'Edge Functions', value: `$${calculated.supabaseEdgeFunctionsCost}` },
-              ]}
-              total={(
-                parseFloat(calculated.supabasePlan || 0) +
-                parseFloat(calculated.supabaseDbComputeCost || 0) +
-                parseFloat(calculated.supabaseEdgeFunctionsCost || 0)
-              ).toFixed(2)}
-            />
-            
-            <CostCard
-              title="Supabase Extras"
-              items={[
-                { label: 'Realtime', value: `$${calculated.supabaseRealtimeCost}` },
-                { label: 'Auth', value: `$${calculated.supabaseAuthCost}` },
-                { label: 'Storage', value: `$${calculated.supabaseMiscStorageCost}` },
-              ]}
-              total={(
-                parseFloat(calculated.supabaseRealtimeCost || 0) +
-                parseFloat(calculated.supabaseAuthCost || 0) +
-                parseFloat(calculated.supabaseMiscStorageCost || 0)
-              ).toFixed(2)}
-            />
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <h3 className="text-xs font-semibold text-white mb-2">Cloudflare R2</h3>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Storage</span>
+                  <span className="text-white font-mono">${calculated.r2StorageCost}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Egress</span>
+                  <span className="text-white font-mono">${calculated.r2EgressCost}</span>
+                </div>
+                <div className="pt-1.5 border-t border-[#21262d] flex justify-between">
+                  <span className="text-xs font-semibold text-white">Subtotal</span>
+                  <span className="text-sm font-mono text-[#58a6ff]">
+                    ${(parseFloat(calculated.r2StorageCost || 0) + parseFloat(calculated.r2EgressCost || 0)).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <h3 className="text-xs font-semibold text-white mb-2">Supabase Core</h3>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Base Plan</span>
+                  <span className="text-white font-mono">${calculated.supabasePlan?.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">DB Compute</span>
+                  <span className="text-white font-mono">${calculated.supabaseDbComputeCost}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Edge Functions</span>
+                  <span className="text-white font-mono">${calculated.supabaseEdgeFunctionsCost}</span>
+                </div>
+                <div className="pt-1.5 border-t border-[#21262d] flex justify-between">
+                  <span className="text-xs font-semibold text-white">Subtotal</span>
+                  <span className="text-sm font-mono text-[#58a6ff]">
+                    ${(
+                      parseFloat(calculated.supabasePlan || 0) +
+                      parseFloat(calculated.supabaseDbComputeCost || 0) +
+                      parseFloat(calculated.supabaseEdgeFunctionsCost || 0)
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <h3 className="text-xs font-semibold text-white mb-2">Supabase Extras</h3>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Realtime</span>
+                  <span className="text-white font-mono">${calculated.supabaseRealtimeCost}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Auth</span>
+                  <span className="text-white font-mono">${calculated.supabaseAuthCost}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-[#7d8590]">Storage</span>
+                  <span className="text-white font-mono">${calculated.supabaseMiscStorageCost}</span>
+                </div>
+                <div className="pt-1.5 border-t border-[#21262d] flex justify-between">
+                  <span className="text-xs font-semibold text-white">Subtotal</span>
+                  <span className="text-sm font-mono text-[#58a6ff]">
+                    ${(
+                      parseFloat(calculated.supabaseRealtimeCost || 0) +
+                      parseFloat(calculated.supabaseAuthCost || 0) +
+                      parseFloat(calculated.supabaseMiscStorageCost || 0)
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -389,17 +448,29 @@ export default function CostCalculator() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-3">
-            <MetricCard label="Cost/Vendor" value={`$${calculated.costPerVendor}`} />
-            <MetricCard 
-              label="Profit/Vendor" 
-              value={`$${((parseFloat(calculated.profitDollars) || 0) / vendors).toFixed(2)}`} 
-            />
-            <MetricCard label="Break-even" value={`${calculated.breakEvenVendors} vendors`} />
-            <MetricCard 
-              label="Margin" 
-              value={`${calculated.profitMargin}%`}
-              color={parseFloat(calculated.profitMargin) >= 50 ? 'green' : parseFloat(calculated.profitMargin) >= 20 ? 'yellow' : 'red'}
-            />
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <p className="text-xs text-[#7d8590] mb-1">Cost/Vendor</p>
+              <p className="text-sm font-mono font-semibold text-white">${calculated.costPerVendor}</p>
+            </div>
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <p className="text-xs text-[#7d8590] mb-1">Profit/Vendor</p>
+              <p className="text-sm font-mono font-semibold text-white">
+                ${((parseFloat(calculated.profitDollars) || 0) / vendors).toFixed(2)}
+              </p>
+            </div>
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <p className="text-xs text-[#7d8590] mb-1">Break-even</p>
+              <p className="text-sm font-mono font-semibold text-white">{calculated.breakEvenVendors} vendors</p>
+            </div>
+            <div className="bg-[#161b22] rounded-md border border-[#30363d] p-3">
+              <p className="text-xs text-[#7d8590] mb-1">Margin</p>
+              <p className={`text-sm font-mono font-semibold ${
+                parseFloat(calculated.profitMargin) >= 50 ? 'text-[#3fb950]' : 
+                parseFloat(calculated.profitMargin) >= 20 ? 'text-[#d29922]' : 'text-[#f85149]'
+              }`}>
+                {calculated.profitMargin}%
+              </p>
+            </div>
           </div>
         </div>
 
@@ -408,11 +479,7 @@ export default function CostCalculator() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-white">Executive Summary</h3>
             <button
-              onClick={() => {
-                const summary = document.getElementById('summary-text').innerText
-                navigator.clipboard.writeText(summary)
-                alert('Copied!')
-              }}
+              onClick={copyToClipboard}
               className="px-2.5 py-1 bg-[#238636] hover:bg-[#2ea043] text-white text-xs font-medium rounded-md transition-colors"
             >
               Copy
@@ -432,7 +499,26 @@ export default function CostCalculator() {
             <p>
               <strong className="text-white">Revenue:</strong> ₦{vendorSubscriptionNaira.toLocaleString()}/vendor = ₦{parseInt(calculated.monthlyRevenueNaira || 0).toLocaleString()}/month (${calculated.monthlyRevenueDollars}).
               {parseFloat(calculated.profitDollars) >= 0 ? (
-                <span> Profit: ${calculated.profitDollars} ({calculated.profitMargin}% margin). Break-even: {calculated.breakEvenVendors} vendors.</span>
+                <> Profit: ${calculated.profitDollars} ({calculated.profitMargin}% margin). Break-even: {calculated.breakEvenVendors} vendors.</>
               ) : (
-                <span> Loss: ${Math.abs(parseFloat(calculated.profitDollars))}. Need {calculated.breakEvenVendors} vendors to break even.</span>
+                <> Loss: ${Math.abs(parseFloat(calculated.profitDollars))}. Need {calculated.breakEvenVendors} vendors to break even.</>
               )}
+            </p>
+
+            <p>
+              <strong className="text-white">Stack:</strong> Supabase (${calculated.supabaseTotalCost}/month) + Cloudflare R2 (${calculated.r2StorageCost}/month). All 17 features included.
+            </p>
+
+            <p className="text-xs text-[#7d8590] border-t border-[#21262d] pt-2 mt-2">
+              {new Date().toLocaleDateString()} • ₦{exchangeRate}/$ • {imageSizeKB}KB images • {surgeMultipliers[surgeMode].label} mode
+            </p>
+          </div>
+        </div>
+
+        <p className="text-center text-xs text-[#7d8590] mt-4">
+          Estimates based on realistic usage patterns
+        </p>
+      </div>
+    </div>
+  )
+}
