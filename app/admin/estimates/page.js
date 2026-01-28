@@ -432,7 +432,7 @@ export default function CostCalculator() {
             <p>
               <strong className="text-white">Revenue:</strong> ₦{vendorSubscriptionNaira.toLocaleString()}/vendor = ₦{parseInt(calculated.monthlyRevenueNaira || 0).toLocaleString()}/month (${calculated.monthlyRevenueDollars}).
               {parseFloat(calculated.profitDollars) >= 0 ? (
-                <> Profit: ${calculated.profitDollars} ({calculated.profitMargin}% margin). Break-even: {calculated.breakEvenVendors} vendors.</>
+                <span> Profit: ${calculated.profitDollars} ({calculated.profitMargin}% margin). Break-even: {calculated.breakEvenVendors} vendors.</span>
               ) : (
-                <> Loss: ${Math.abs(parseFloat(calculated.profitDollars))}. Need {calculated.breakEvenVendors} vendors to break even.</>
+                <span> Loss: ${Math.abs(parseFloat(calculated.profitDollars))}. Need {calculated.breakEvenVendors} vendors to break even.</span>
               )}
